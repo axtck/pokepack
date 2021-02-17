@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://localhost:44364/api',
+    baseURL: 'https://pokeapi.co/api/v2/',
 });
 
 export default instance;
