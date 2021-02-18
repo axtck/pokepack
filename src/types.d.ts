@@ -3,7 +3,7 @@ export type PokemonType = {
     url: string;
 }
 
-export type PokedexType = {
+export type RegionType = {
     name: string;
     url: string;
 }
