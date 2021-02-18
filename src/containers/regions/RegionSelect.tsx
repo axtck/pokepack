@@ -7,6 +7,7 @@ interface SelectRegionProps {
 };
 
 const SelectRegion: FunctionComponent<SelectRegionProps> = ({ regions, onRegionSelectChange }) => {
+
     /**********
      * Render
      **********/
@@ -24,7 +25,7 @@ const SelectRegion: FunctionComponent<SelectRegionProps> = ({ regions, onRegionS
                 className="form-control"
                 onChange={onRegionSelectChange}
             >
-                <option></option>
+                <option disabled></option>
                 {pokedexOptions}
             </select>
         </div>

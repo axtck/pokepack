@@ -10,6 +10,10 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
             label: "Pokémons",
             route: "/home/pokemons",
         },
+        {
+            label: "Regions",
+            route: "/home/regions",
+        },
     ];
 
 

@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState, useEffect, ChangeEvent, MouseEvent 
 import { RegionType } from '../../types';
 import api from '../../api/api';
 import Loading from '../../components/loading/Loading';
-import SelectRegion from './SelectRegion';
+import SelectRegion from './RegionSelect';
 import { useHistory } from 'react-router-dom';
 
 interface RegionsProps { };
@@ -12,7 +12,6 @@ const Regions: FunctionComponent<RegionsProps> = () => {
 
     const [regions, setRegions] = useState<RegionType[] | null>(null);
     const [region, setRegion] = useState<string>("");
-    const [valid, setValid] = useState<Boolean>(false);
 
     useEffect(() => {
         api.get('/pokedex/')
@@ -29,22 +28,12 @@ const Regions: FunctionComponent<RegionsProps> = () => {
 
     const handleRegionSelectChanged = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
-
-        if (!e.target.value || e.target.value === null) {
-            setValid(false)
-            setRegion(e.target.value);
-        } else {
-            setValid(true)
-        }
-        console.log(e.target.value);
+        setRegion(e.target.value);
     }
-
-    console.log(valid);
-    console.log(regions)
 
     const handleGoClicked = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        history.push('/');
+        history.push('/home/pokemons/' + region);
     }
 
     /*********
