@@ -19,7 +19,7 @@ const Pokemons: FunctionComponent<PokemonsProps> = () => {
             });
     });*/
 
-    if (pokemons === null || pokemons === undefined) {
+    if (pokemons === null) {
         return <Loading />;
     }
 

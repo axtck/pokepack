@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useState, useEffect, ChangeEvent, MouseEvent } from 'react';
-import { RegionType } from '../../types';
+import { NameAndUrl } from '../../types';
 import api from '../../api/api';
 import Loading from '../../components/loading/Loading';
-import SelectRegion from './RegionSelect';
+import RegionSelect from './RegionSelect';
 import { useHistory } from 'react-router-dom';
 
 interface RegionsProps { };
@@ -10,21 +10,28 @@ interface RegionsProps { };
 const Regions: FunctionComponent<RegionsProps> = () => {
     const history = useHistory();
 
-    const [regions, setRegions] = useState<RegionType[] | null>(null);
+    const [regions, setRegions] = useState<NameAndUrl[] | null>(null);
     const [region, setRegion] = useState<string>("");
+
+    const [validBtnClass, setValidBtnClass] = useState<string>("btn-danger");
 
     useEffect(() => {
         api.get('/pokedex/')
             .then((response) => {
-                setRegions((regions) => {
-                    return regions = response.data.results;
-                });
+                setRegions(response.data.results);
             })
             .catch((error) => {
                 console.log(error);
             });
     }, []);
 
+    useEffect(() => {
+        if (region) {
+            setValidBtnClass("btn-success");
+        } else {
+            setValidBtnClass("btn-danger");
+        }
+    }, [region])
 
     const handleRegionSelectChanged = (e: ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
@@ -33,7 +40,9 @@ const Regions: FunctionComponent<RegionsProps> = () => {
 
     const handleGoClicked = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        history.push('/home/pokemons/' + region);
+        if (region) {
+            history.push('/home/pokemons/' + region);
+        }
     }
 
     /*********
@@ -47,8 +56,8 @@ const Regions: FunctionComponent<RegionsProps> = () => {
     return (
         <div className="form-group">
             <h3>Select Region</h3>
-            <SelectRegion regions={regions} onRegionSelectChange={handleRegionSelectChanged} />
-            <button className="mt-3 btn btn-primary" onClick={handleGoClicked}>GO</button>
+            <RegionSelect regions={regions} onRegionSelectChange={handleRegionSelectChanged} />
+            <button className={"mt-3 btn " + validBtnClass} onClick={handleGoClicked}>GO</button>
         </div>
     )
 }

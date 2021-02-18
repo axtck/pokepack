@@ -1,12 +1,12 @@
 import React, { ChangeEvent, FunctionComponent } from 'react';
-import { RegionType } from '../../types';
+import { NameAndUrl } from '../../types';
 
 interface SelectRegionProps {
-    regions: RegionType[];
+    regions: NameAndUrl[];
     onRegionSelectChange: (e: ChangeEvent<HTMLSelectElement>) => void;
 };
 
-const SelectRegion: FunctionComponent<SelectRegionProps> = ({ regions, onRegionSelectChange }) => {
+const RegionSelect: FunctionComponent<SelectRegionProps> = ({ regions, onRegionSelectChange }) => {
 
     /**********
      * Render
@@ -25,11 +25,11 @@ const SelectRegion: FunctionComponent<SelectRegionProps> = ({ regions, onRegionS
                 className="form-control"
                 onChange={onRegionSelectChange}
             >
-                <option disabled></option>
+                <option></option>
                 {pokedexOptions}
             </select>
         </div>
     );
 }
 
-export default SelectRegion;
+export default RegionSelect;
