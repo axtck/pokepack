@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import api from '../../api/api';
 import Loading from '../../components/loading/Loading';
 import Pokemon from '../../components/pokemon/Pokemon';
-import { PokemonType, NameAndUrl } from '../../types';
+import { PokemonType, NameAndUrl, PokemonDataType } from '../../types';
 
 interface RegionPokemonProps { };
 
@@ -17,6 +17,7 @@ const RegionPokemons: FunctionComponent<RegionPokemonProps> = () => {
 
     const [regions, setRegions] = useState<NameAndUrl[] | null>(null);
     const [regionPokemons, setRegionPokemons] = useState<PokemonType[] | null>(null);
+    const [regionPokemonDetails, setRegionPokemonDetails] = useState<PokemonDataType[] | null | void[] | any>(null);
 
     useEffect(() => {
         api.get('/pokedex/')
@@ -29,10 +30,9 @@ const RegionPokemons: FunctionComponent<RegionPokemonProps> = () => {
     }, []);
 
     useEffect(() => {
-        let matchingUrl;
         if (regions !== null && regions !== undefined) {
-            matchingUrl = regions.filter(r => r.name === params.region);
-            axios.get(matchingUrl[0].url)
+            const matchingUrl = regions.filter(r => r.name === params.region)[0].url;
+            axios.get(matchingUrl)
                 .then((response) => {
                     setRegionPokemons(response.data.pokemon_entries);
                 })
@@ -40,22 +40,60 @@ const RegionPokemons: FunctionComponent<RegionPokemonProps> = () => {
                     console.log(error);
                 });
         }
-    }, [regions])
+    }, [regions]);
+
+    useEffect(() => {
+        const allData: PokemonDataType[] = [];
+        regionPokemons?.map((rp) => {
+            api
+                .get("/pokemon/" + rp.entry_number)
+                .then(res => {
+                    allData.push(res.data)
+                })
+        });
+        Promise.all(allData).then((alld) => {
+            console.log(alld)
+        });
+
+
+
+        /*if (regionPokemons) {
+            Promise.all(
+                tous
+            ).then((allData) => {
+                console.log(allData);
+            })
+        }*/
+
+        /*if (regionPokemons) {
+            Promise.all(
+                regionPokemons?.map(p => api
+                    .get("/pokemon/" + p.entry_number)
+                    .then(res => res.data)
+                )
+            ).then((allData) => {
+                const combined = regionPokemons.map((rp, i) => {
+                    return { ...rp, data: allData[i] }
+                });
+                setRegionPokemonDetails(combined);
+            });
+        }*/
+    }, [regionPokemons]);
+
 
 
     /*********
      * Render
      *********/
-
-
-    // does this also go for null checking? clean
-    const mappedPokemons = regionPokemons?.map((rp, i) => {
-        return <Pokemon key={i} pokemon={rp} />
-    })
-
-    if (regions === null || regions === undefined) {
-        return <Loading />
+    if (regions === null || regions === undefined || regionPokemons === null || regionPokemons === undefined) {
+        return <Loading />;
     }
+
+    const mappedPokemons = regionPokemons.map((rp, i) => {
+        return <Pokemon key={i} pokemon={rp} />
+    });
+
+
 
 
     return (

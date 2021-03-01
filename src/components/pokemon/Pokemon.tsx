@@ -8,30 +8,14 @@ interface PokemonProps {
 };
 
 const Pokemon: FunctionComponent<PokemonProps> = ({ pokemon }) => {
-    const [pokemonData, setPokemonData] = useState<PokemonDataType | null>(null);
-
-    useEffect(() => {
-        api.get('/pokemon/' + pokemon.entry_number)
-            .then((response) => {
-                setPokemonData(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }, [])
 
     /**********
      * Render
      **********/
 
-    if (pokemonData === null) {
-        return <Loading />
-    }
-
     return (
         <div>
-            {pokemonData.name}
-            <img src={pokemonData.sprites.front_default} alt={pokemonData.name} />
+            
         </div>
     )
 }
